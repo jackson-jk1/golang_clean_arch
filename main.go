@@ -10,10 +10,8 @@ import (
 
 func main() {
 	config.LoadEnv()
-	fmt.Println(config.ConectionString)
-	fmt.Println("rodando api")
-
 	r := router.ReturnRoutes()
 
+	fmt.Printf("Escutando na porta %d", config.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), r))
 }

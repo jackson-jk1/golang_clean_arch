@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Create(w http.ResponseWriter, r *http.Request) {
+func CreateState(w http.ResponseWriter, r *http.Request) {
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		response.Erro(w, http.StatusUnprocessableEntity, err)
@@ -45,7 +45,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusCreated, res)
 }
 
-func Show(w http.ResponseWriter, r *http.Request) {
+func ShowState(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	if err != nil {
 
@@ -64,7 +64,7 @@ func Show(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func View(w http.ResponseWriter, r *http.Request) {
+func ViewState(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	uf := params["stateUF"]
 	db, err := database.Connect()
@@ -85,7 +85,7 @@ func View(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Update(w http.ResponseWriter, r *http.Request) {
+func UpdateState(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	uf := params["stateUF"]
 
@@ -123,7 +123,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, res)
 }
 
-func Delete(w http.ResponseWriter, r *http.Request) {
+func DeleteState(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	uf := params["stateUF"]
 	db, err := database.Connect()

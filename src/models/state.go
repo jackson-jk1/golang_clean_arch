@@ -1,9 +1,8 @@
 package models
 
 import (
-	"errors"
+	"api/src/service"
 	"fmt"
-	"reflect"
 	"strconv"
 
 	"github.com/asaskevich/govalidator"
@@ -17,7 +16,7 @@ type State struct {
 
 func init() {
 	govalidator.SetFieldsRequiredByDefault(true)
-	validator.SetValidationFunc("notzz", WhiteSpaces)
+	validator.SetValidationFunc("notzz", service.WhiteSpaces)
 
 }
 
@@ -36,13 +35,5 @@ func (state *State) validate() error {
 		return err
 	}
 
-	return nil
-}
-
-func WhiteSpaces(v interface{}, param string) error {
-	st := reflect.ValueOf(v)
-	if govalidator.HasWhitespaceOnly(st.String()) {
-		return errors.New("value cannot be only white spaces")
-	}
 	return nil
 }
