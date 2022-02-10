@@ -3,7 +3,6 @@ package repositories
 import (
 	"api/src/models"
 	"database/sql"
-	"fmt"
 )
 
 type States struct {
@@ -94,7 +93,7 @@ func (s States) Show() ([]models.State, error) {
 		); err != nil {
 			return nil, err
 		}
-		fmt.Printf("a")
+
 		states = append(states, state)
 	}
 

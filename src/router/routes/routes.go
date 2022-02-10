@@ -15,6 +15,7 @@ type Route struct {
 
 func Configuration(r *mux.Router) *mux.Router {
 	routes := routesStates
+	routes = append(routes, routeLogin)
 	routes = append(routes, routesUsers...)
 
 	for _, route := range routes {

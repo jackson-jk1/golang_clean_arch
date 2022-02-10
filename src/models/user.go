@@ -3,6 +3,7 @@ package models
 import (
 	"api/src/service"
 	"errors"
+
 	"time"
 
 	"github.com/asaskevich/govalidator"
@@ -24,9 +25,14 @@ func init() {
 
 }
 
-func (user *User) Prepare() error {
+func (user *User) Prepare(insert bool) error {
 	if err := validator.Validate(user); err != nil {
 		return err
+	}
+	if insert == true {
+		if err := user.FormattedPassword(); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -40,7 +46,19 @@ func (user *User) validate() error {
 	if !cpf.IsValid() {
 		return errors.New("bad formatted cpf")
 	}
-
+	if err := user.validate(); err != nil {
+		return err
+	}
 	return nil
 
+}
+
+func (user *User) FormattedPassword() error {
+	passwordHash, err := service.Hash(user.Password)
+	if err != nil {
+		return err
+	}
+
+	user.Password = string(passwordHash)
+	return nil
 }

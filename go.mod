@@ -12,4 +12,8 @@ require (
 	gopkg.in/validator.v2 v2.0.0-20210331031555-b37d688a7fb0
 )
 
-require gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+)

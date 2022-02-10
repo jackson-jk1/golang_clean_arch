@@ -2,8 +2,6 @@ package models
 
 import (
 	"api/src/service"
-	"fmt"
-	"strconv"
 
 	"github.com/asaskevich/govalidator"
 	"gopkg.in/validator.v2"
@@ -28,7 +26,6 @@ func (state *State) Prepare() error {
 }
 
 func (state *State) validate() error {
-	fmt.Printf(strconv.Itoa(len(state.Uf)))
 
 	_, err := govalidator.ValidateStruct(state)
 	if err != nil {

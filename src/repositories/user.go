@@ -25,8 +25,9 @@ func (s Users) Create(User models.User) (*models.User, error) {
 
 		return &models.User{}, err
 	}
+	User.Id = uuid.New()
 	defer Userment.Close()
-	_, erro := Userment.Exec(uuid.New(), User.Cpf, User.Password, time.Now())
+	_, erro := Userment.Exec(User.Id, User.Cpf, User.Password, time.Now())
 	if erro != nil {
 
 		return &models.User{}, erro
@@ -35,9 +36,9 @@ func (s Users) Create(User models.User) (*models.User, error) {
 	return &User, nil
 
 }
-func (s Users) Find(uf string) (models.User, error) {
+func (s Users) Find(UUID string) (models.User, error) {
 
-	response, err := s.db.Query(`select * from public.tb001_uf where tb001_sigla_uf = $1;`, uf)
+	response, err := s.db.Query(`select * from public.tb011_logins where tb011_logins = $1;`, UUID)
 	if err != nil {
 		return models.User{}, err
 	}
@@ -54,32 +55,35 @@ func (s Users) Find(uf string) (models.User, error) {
 			return models.User{}, err
 		}
 	}
-
+	User.Password = ""
 	return User, nil
 
 }
-func (s Users) Update(UF string, User models.User) (*models.User, error) {
+func (s Users) Update(UUID string, User models.User) (*models.User, error) {
 
 	Userment, err := s.db.Prepare(
-		`update tb001_uf set tb001_sigla_uf = $1, tb001_nome_estado = $2 where tb001_sigla_uf = $3`,
+		`update public.tb011_logins set tb010_cpf = $1, tb011_senha = $2 where tb011_logins = $3`,
 	)
 	if err != nil {
 
 		return &models.User{}, err
 	}
 	defer Userment.Close()
-	_, erro := Userment.Exec(User.Cpf, User.Password)
+	_, erro := Userment.Exec(User.Cpf, User.Password, UUID)
 	if erro != nil {
 
 		return &models.User{}, err
 	}
+
+	User.Id = uuid.MustParse(UUID)
+	User.Password = ""
 	return &User, nil
 
 }
 
-func (s Users) Delete(UF string) error {
+func (s Users) Delete(UUDI string) error {
 
-	Userment, err := s.db.Prepare(`delete from public.tb001_uf where tb001_sigla_uf = $1;`)
+	Userment, err := s.db.Prepare(`delete from public.tb011_logins where tb011_logins = $1;`)
 	if err != nil {
 		return err
 	}
@@ -88,11 +92,30 @@ func (s Users) Delete(UF string) error {
 		return err
 	}
 	defer Userment.Close()
-	_, erro := Userment.Exec(UF)
+	_, erro := Userment.Exec(UUDI)
 	if erro != nil {
 
 		return erro
 	}
 	return nil
 
+}
+
+func (s Users) FindCpf(Cpf string) (models.User, error) {
+	response, err := s.db.Query(`select tb011_logins, tb011_senha from public.tb011_logins where tb010_cpf = $1;`, Cpf)
+	if err != nil {
+		return models.User{}, err
+	}
+	defer response.Close()
+	var User models.User
+
+	if response.Next() {
+		if err = response.Scan(
+			&User.Id,
+			&User.Password,
+		); err != nil {
+			return models.User{}, err
+		}
+	}
+	return User, nil
 }
